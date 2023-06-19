@@ -34,7 +34,6 @@ class ModeloCrearFacturacion{
 
     
 
-
     /**  
      *       funcion que me permite realizar una facturacion 
      *      esta funcion recibe todos los datos , y utiliza las diferentes funciones de los modelos
@@ -44,8 +43,30 @@ class ModeloCrearFacturacion{
     {
         
         try {
-            
+
             $db = new Conexion;
+
+
+            // for  para la validacion de la existencia y stock de los productos 
+            foreach ($this->productos as $key) {
+                 
+                $queryV = "select * from productos where cod_producto = ?";
+                $stament = $db->connect()->prepare($queryV);
+                $stament->execute([$key['cod_producto']]);
+                $producto = $stament->fetchAll(PDO::FETCH_ASSOC);              
+                if (empty($producto)) {
+                    return [
+                        'message' => 'No existe el producto: '.$key['cod_producto']
+                    ];
+                }elseif ($producto[0]['stock'] < $key['cantidad']) {
+                    return [
+                        'message' => 'No hay esa cantidad del producto: '.$key['cod_producto'],
+                        'cantidad disponible' => $producto[0]['stock']  
+                    ];
+                }
+            }
+            
+
             $cliente = new ClienteModel($this->dataCliente['cedula'],$this->dataCliente['nombre'],$this->dataCliente['correo'],$this->dataCliente['direccion'],$this->dataCliente['telefono']);
             $clienteCreado = $cliente->addCliente();
 
@@ -62,14 +83,21 @@ class ModeloCrearFacturacion{
 
             foreach ($this->productos as $key) {
                 
-                $query = "select id from productos where cod_producto = ?";
+                $query = "select id, stock from productos where cod_producto = ?";
                 $stament = $db->connect()->prepare($query);
                 $stament->execute([$key['cod_producto']]);
-                $result = $stament->fetchAll(PDO::FETCH_ASSOC);
-                $detalle = new DetalleFacturaModel($facturaCreada[0]['id'],$result[0]['id'],$key['cantidad']);
+                $product = $stament->fetchAll(PDO::FETCH_ASSOC);
+                $detalle = new DetalleFacturaModel($facturaCreada[0]['id'],$product[0]['id'],$key['cantidad']);
+
+                $product[0]['stock'] -= $key['cantidad'];
+                $queryUpdate = "UPDATE productos SET stock = ? WHERE id = ?";
+                $staments = $db->connect()->prepare($queryUpdate); 
+                $staments->execute([$product[0]['stock'], $product[0]['id']]);
                 $detalle->save();
+            
             }
 
+            $db->closedCon();
             return [
                 $clienteCreado[0],
                 $facturaCreada[0],
@@ -82,11 +110,6 @@ class ModeloCrearFacturacion{
         }
 
     }
-
-
-
-
-
 
 
 }
