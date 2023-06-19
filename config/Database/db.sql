@@ -59,3 +59,12 @@ CREATE TABLE detalle_factura(
         AND detalle_factura.id_producto = productos.id 
         AND facturas.codigo_factura = 'F0001';
 */
+
+/*  -- autoincrement reset 
+
+    ALTER TABLE clientes AUTO_INCREMENT = 1;
+    ALTER TABLE detalle_factura AUTO_INCREMENT = 1;
+    ALTER TABLE facturas AUTO_INCREMENT = 1;
+    ALTER TABLE productos AUTO_INCREMENT = 1;
+
+*/
