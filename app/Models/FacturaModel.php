@@ -91,7 +91,7 @@ class FacturaModel {
             $queryValidator = "select * from facturas where codigo_factura = ? ";
             $stament = $db->connect()->prepare($queryValidator);
             $stament->execute([$code]);
-            $result = $stament->fetchAll(PDO::FETCH_ASSOC);
+            $result = $stament->fetch(PDO::FETCH_ASSOC);
             $db->closedCon();
             return $result;
         } catch (\Exception $e) {
@@ -109,31 +109,18 @@ class FacturaModel {
         try {
             $db = new Conexion;
 
-            $billExist = $this->getByCode($this->codigo_factura);
-            
-            if (empty($billExist)) {
-                $query = "insert into facturas (codigo_factura, nombre_vendedor, id_cliente) values ( ?, ?, ?)";
-                $stament = $db->connect()->prepare($query);
-                $stament->execute([
-                    $this->codigo_factura,
-                    $this->nombre_vendedor,
-                    //$this->fecha,
-                    $this->id_cliente
-                ]);
-                $newBill = $this->getByCode($this->codigo_factura);
-                $db->closedCon();
-                return $newBill;
-               /*  return [
-                    'message' => 'Bill created',
-                    "data"    => $newBill
-                ]; */
-            }
-            return $billExist;
-            /* return [
-                'message' => 'Codigo de Factura ya registrado, el codigo de factura debe ser unico',
-                "data"    => $billExist
-            ]; */
-
+            $query = "insert into facturas (codigo_factura, nombre_vendedor, id_cliente) values ( ?, ?, ?)";
+            $stament = $db->connect()->prepare($query);
+            $stament->execute([
+                $this->codigo_factura,
+                $this->nombre_vendedor,
+                //$this->fecha,
+                $this->id_cliente
+            ]);
+            $newBill = $this->getByCode($this->codigo_factura);
+            $db->closedCon();
+            return $newBill;
+               
         } catch (\Exception $e) {
             return $e->getMessage();
         }

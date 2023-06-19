@@ -101,7 +101,7 @@ class ClienteModel
             $queryValidated = "SELECT * FROM clientes WHERE  cedula = ? ";
             $stament = $db->connect()->prepare($queryValidated); 
             $stament->execute([$cedu]);
-            $clienteExiste = $stament->fetchAll(PDO::FETCH_ASSOC);
+            $clienteExiste = $stament->fetch(PDO::FETCH_ASSOC);
             $db->closedCon();
             return $clienteExiste;
         } catch (\Throwable $th) {
@@ -115,32 +115,20 @@ class ClienteModel
    public  function addCliente(){
         try {
             $db = new Conexion;
-            $clienteExiste = $this->getIdByCedula($this->cedula);
+        
+            $query = "INSERT INTO clientes (cedula,nombre,correo,direccion,telefono) VALUES ( ?, ?, ?, ?, ?)";  
+            $stamento = $db->connect()->prepare($query);
+            $stamento->execute([
+                $this->cedula, 
+                $this->nombre,
+                $this->correo, 
+                $this->direccion, 
+                $this->telefono
+            ]);
+            $new = $this->getIdByCedula($this->cedula);
+            $db->closedCon();
+            return $new;
             
-            if (empty($clienteExiste)) {
-                // si no existe lo creamos 
-                $query = "INSERT INTO clientes (cedula,nombre,correo,direccion,telefono) VALUES ( ?, ?, ?, ?, ?)";  
-                $stamento = $db->connect()->prepare($query);
-                $stamento->execute([
-                    $this->cedula, 
-                    $this->nombre,
-                    $this->correo, 
-                    $this->direccion, 
-                    $this->telefono
-                ]);
-                $new =  $this->getIdByCedula($this->cedula);
-                $db->closedCon();
-                return $new;
-               /*  return [
-                    'message' => 'Create Succesfuly',
-                    'data' => $new
-                ]; */
-            }
-            return $clienteExiste;
-            /* return [
-                'message' => 'Ya existe un usuario con ese numero de documento',
-                'data' => $clienteExiste
-            ] */;
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
