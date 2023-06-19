@@ -2,8 +2,8 @@
 
 namespace Routes;
 
-use Dotenv\Dotenv;
 
+use Dotenv\Dotenv;
 
 // router
 $router = new \Bramus\Router\Router(); 
@@ -41,16 +41,15 @@ $router->mount('/api/producto', function() use($router){
 
 
 
-
+// factura detalle routes
 $router->get('/api/detalle/','App\Http\Controllers\DetalleFController@getAllDetails');
 $router->get('/api/detalle/one', 'App\Http\Controllers\DetalleFController@getDetalleById');
+$router->post('/api/detalle/add','App\Http\Controllers\DetalleFController@insertAFactureDetail');
 
 
 
-
-
-
-
+// crear una factura 
+$router->post('/api/crearFactura/add', 'App\Http\Controllers\CrearFacturacionController@registrarFactura');
 
 
 
