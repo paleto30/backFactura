@@ -141,24 +141,18 @@ class DetalleFacturaModel
     {
         try {
             $db =  new Conexion;
-            $registroExiste = $this->validate($this->id_factura, $this->id_producto);
-            if (empty($registroExiste)) {
-                $query = "insert into detalle_factura (id_factura, id_producto, cantidad) values ( ?, ?, ?)";
-                $stament = $db->connect()->prepare($query);
-                $stament->execute([$this->id_factura, $this->id_producto, $this->cantidad]);
-                $new  = $this->validate($this->id_factura, $this->id_producto);
-                $db->closedCon();
-                return [
-                  'message'=> 'detalle_factura created',
-                  'data' => $new  
-                ];
-            }
-
+            
+            $query = "insert into detalle_factura (id_factura, id_producto, cantidad) values ( ?, ?, ?)";
+            $stament = $db->connect()->prepare($query);
+            $stament->execute([$this->id_factura, $this->id_producto, $this->cantidad]);
+            $new  = $this->validate($this->id_factura, $this->id_producto);
+            $db->closedCon();
             return [
-                'message' => 'Registro existente, tenga en cuenta que no pueden registrar el mismo producto dos veces en la misma factura',
-                'data' => $registroExiste
+                'message'=> 'detalle_factura created',
+                'data' => $new  
             ];
             
+        
         } catch (\Exception $th) {
             return $th->getMessage();
         }
