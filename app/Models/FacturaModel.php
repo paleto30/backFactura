@@ -122,16 +122,17 @@ class FacturaModel {
                 ]);
                 $newBill = $this->getByCode($this->codigo_factura);
                 $db->closedCon();
-                return [
+                return $newBill;
+               /*  return [
                     'message' => 'Bill created',
                     "data"    => $newBill
-                ];
+                ]; */
             }
-
-            return [
+            return $billExist;
+            /* return [
                 'message' => 'Codigo de Factura ya registrado, el codigo de factura debe ser unico',
                 "data"    => $billExist
-            ];
+            ]; */
 
         } catch (\Exception $e) {
             return $e->getMessage();

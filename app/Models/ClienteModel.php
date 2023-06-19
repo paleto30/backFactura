@@ -130,16 +130,17 @@ class ClienteModel
                 ]);
                 $new =  $this->getIdByCedula($this->cedula);
                 $db->closedCon();
-                return [
+                return $new;
+               /*  return [
                     'message' => 'Create Succesfuly',
                     'data' => $new
-                ];
+                ]; */
             }
-
-            return [
+            return $clienteExiste;
+            /* return [
                 'message' => 'Ya existe un usuario con ese numero de documento',
                 'data' => $clienteExiste
-            ];
+            ] */;
         } catch (\Throwable $th) {
             return $th->getMessage();
         }
