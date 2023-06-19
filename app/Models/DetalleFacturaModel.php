@@ -71,7 +71,12 @@ class DetalleFacturaModel
    }
 
 
-    
+
+   /**
+    *       Funcion para obtener un registor por su id
+    *
+    *       @param id
+   */
     public static function getOneById($id)
     {
         try {
@@ -90,6 +95,75 @@ class DetalleFacturaModel
             return $th->getMessage();
         }
     }
+
+
+
+    /**  
+    *        funcion para validar que en una misma factura
+    *        no se registre dos veces el mismp proucto
+    *        esto por que el detalle factura 
+    *        tiene un campo para registrar cantidad
+    *        de un producto especifico,
+    *        asi que no deberian regsistrarse nas de una vez
+    *        el mismo codigo de produto, 
+    *        lo que varia es la cantidad
+    *       @param  id_factura 
+    *       @param  id_producto
+    */
+    public function validate($id_f, $id_p)
+    {
+        try {
+            
+            $db = new Conexion;        
+            $queryVlidator = "select * from detalle_factura where detalle_factura.id_factura = ?  AND detalle_factura.id_producto = ?";
+            $stament = $db->connect()->prepare($queryVlidator);
+            $stament->execute([$id_f,$id_p]);
+            $result = $stament->fetchAll(PDO::FETCH_ASSOC);
+            $db->closedCon();
+            if (empty($result)) {
+                return [];
+            }
+
+            return $result;
+        } catch (\Exception $th) {
+            return $th->getMessage();
+        }
+    }
+
+
+    /**   
+    *       funcion para guarda el registro de un detalle_factura
+    *       @param  id_factura 
+    *       @param  id_producto
+    *       @param  cantidad (de dicho producto)
+    */
+    public function save()
+    {
+        try {
+            $db =  new Conexion;
+            $registroExiste = $this->validate($this->id_factura, $this->id_producto);
+            if (empty($registroExiste)) {
+                $query = "insert into detalle_factura (id_factura, id_producto, cantidad) values ( ?, ?, ?)";
+                $stament = $db->connect()->prepare($query);
+                $stament->execute([$this->id_factura, $this->id_producto, $this->cantidad]);
+                $new  = $this->validate($this->id_factura, $this->id_producto);
+                $db->closedCon();
+                return [
+                  'message'=> 'detalle_factura created',
+                  'data' => $new  
+                ];
+            }
+
+            return [
+                'message' => 'Registro existente, tenga en cuenta que no pueden registrar el mismo producto dos veces en la misma factura',
+                'data' => $registroExiste
+            ];
+            
+        } catch (\Exception $th) {
+            return $th->getMessage();
+        }
+    }
+
 
 
 }

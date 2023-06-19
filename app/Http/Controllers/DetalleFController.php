@@ -43,4 +43,20 @@ class DetalleFController
     }
     
 
+
+    
+
+    public function insertAFactueDetail(){
+        try {
+            
+            $datos = json_decode(file_get_contents('php://input'),true);
+            $detalle = new DetalleFacturaModel(...$datos);
+            echo json_encode($detalle->save());
+
+        } catch (\Throwable $th) {
+            return $th->getMessage();
+        }
+    } 
+
+
 }
