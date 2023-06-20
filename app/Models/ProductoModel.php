@@ -139,6 +139,33 @@ class ProductoModel
 
 
 
+    /**
+     *  
+     *          funcion para cargar el producto en los inputs cuando existe  
+     * 
+    */
+    public static function getProductoInDb($cod_producto)
+    {
+        try {
+
+            $db = new Conexion;
+            $query = "select id , cod_producto, nombre_producto, valor_unidad from productos where cod_producto = ?"; 
+            $stament = $db->connect()->prepare($query);
+            $stament->execute([$cod_producto]);
+            $producto = $stament->fetch(PDO::FETCH_ASSOC); 
+            $db->closedCon();
+            if (empty($producto)) {
+                return ['data'=> 'Inexistente'];
+            }
+
+            return $producto;
+        } catch (\Exception $e) {
+            return $e->getMessage();
+        }
+
+    }
+
+
 
 }
 

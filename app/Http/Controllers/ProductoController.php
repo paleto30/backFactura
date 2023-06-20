@@ -59,6 +59,21 @@ class ProductoController {
     
 
 
+    public function loadProduct()
+    {
+        try {
+            
+            $cod_producto = $_GET['cod_producto'];
+            $product = ProductoModel::getProductoInDb($cod_producto);
+            echo json_encode($product);
+
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+
+
+    }
+
 
 
 

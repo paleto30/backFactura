@@ -31,12 +31,12 @@ $router->mount('/api/factura',function() use($router) {
 });
 
 
-
 // producto routes
 $router->mount('/api/producto', function() use($router){
     $router->get('/','App\Http\Controllers\ProductoController@getAllProductos');
     $router->get('/one','App\Http\Controllers\ProductoController@getProductById');
-    $router->post('add', 'App\Http\Controllers\ProductoController@insertProducto');
+    $router->post('/add', 'App\Http\Controllers\ProductoController@insertProducto');
+    $router->get('/load', 'App\Http\Controllers\ProductoController@loadProduct');
 });
 
 

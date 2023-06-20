@@ -229,6 +229,33 @@ class ModeloCrearFacturacion{
     }
 
 
+
+
+
+    /**
+     * 
+     *      Funcion para listar el cliente y la 
+     * 
+     * 
+     * 
+     * 
+    */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
 
 
