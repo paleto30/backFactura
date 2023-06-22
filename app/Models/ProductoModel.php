@@ -149,7 +149,7 @@ class ProductoModel
         try {
 
             $db = new Conexion;
-            $query = "select id , cod_producto, nombre_producto, valor_unidad from productos where cod_producto = ?"; 
+            $query = "select cod_producto, nombre_producto, valor_unidad from productos where cod_producto = ?"; 
             $stament = $db->connect()->prepare($query);
             $stament->execute([$cod_producto]);
             $producto = $stament->fetch(PDO::FETCH_ASSOC); 
