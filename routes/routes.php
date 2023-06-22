@@ -18,6 +18,7 @@ $router->mount('/api/cliente',function() use($router) {
     $router->get('/','App\Http\Controllers\ClienteController@getAllClientes');
     $router->get('/one','App\Http\Controllers\ClienteController@getOneById');
     $router->post('/add','App\Http\Controllers\ClienteController@addOneCliente');
+    $router->get('/load','App\Http\Controllers\ClienteController@getClienteByCedula');
 });
 
 

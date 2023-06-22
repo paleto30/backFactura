@@ -134,5 +134,31 @@ class ClienteModel
         }
    }
 
+
+
+   public static function getClienteByCedula($cedula)
+   {
+    try {
+        
+        $db = new Conexion;
+
+        $query = "select * from clientes where cedula = ?";
+
+        $stament = $db->connect()->prepare($query);
+        $stament->execute([$cedula]);
+        $cliente = $stament->fetch(PDO::FETCH_ASSOC);
+        $db->closedCon();
+        if (empty($cliente)) {
+            return ['message'=> 'Inexistente'];
+        }
+        
+        return $cliente;
+
+    } catch (\Throwable $th) {
+        return $th->getMessage();
+    }
+   }
+
+
    
 }

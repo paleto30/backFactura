@@ -59,6 +59,25 @@ class ClienteController
         }
     }   
 
+
+
+    /* 
+            funcion para cargar los datos del usuario 
+
+            si existe
+    */
+
+    public function getClienteByCedula()
+    {
+        try {
+            $cedula = $_GET['cedula'];
+            $cliente = ClienteModel::getClienteByCedula($cedula);
+            echo json_encode($cliente);
+        } catch (\Throwable $th) {
+            echo $th->getMessage();
+        }
+    }
+
     
 
 }
